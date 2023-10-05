@@ -17,18 +17,16 @@ var BURNER_ROLE = getRole("BURNER_ROLE");
 // Publicar NFT en Mumbai
 async function deployMumbai() {
   const cuyNFTName = 'CuyCollectionNft'
-  const cuyNftContract = await deploySC(CuyCollectionNft);
+  const cuyNftContract = await deploySC(cuyNFTName);
   const cuyNftAddress = await cuyNftContract.getAddress();
   const cuyNftContractImpl = await printAddress(cuyNFTName, cuyNftAddress);
-  await verify(cuyNftContractImpl, bbitesTokenName);
+  await verify(cuyNftContractImpl, cuyNFTName);
 
   // utiliza deploySC
   // utiliza printAddress
   // utiliza ex
   // utiliza ex
   // utiliza verify
-
-  await verify(implAdd, "CUYNFT");
 }
 
 // Publicar UDSC, Public Sale y Bbites Token en Goerli
@@ -73,9 +71,8 @@ async function deployGoerli() {
   // script para verificacion del contrato
 }
 
-// deployMumbai()
-  deployGoerli()
-  //
+deployMumbai()
+  // deployGoerli()
   .catch((error) => {
     console.error(error);
     process.exitCode = 1;

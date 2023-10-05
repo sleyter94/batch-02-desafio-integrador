@@ -37,9 +37,9 @@ var usdcAddress, bbitesTknAdd, pubSContractAdd;
 function initSCsGoerli() {
   provider = new ethers.BrowserProvider(window.ethereum);
 
-  usdcAddress = "0x9077a4a7CC60f07Bafb91539bA0ef18d2dC128C2";
-  bbitesTknAdd = "0x8886a20293C516918a7593c9e5Fb69428FB65717";
-  pubSContractAdd = "0x1ddf3C8a9955022c283ff02db4500a1A44372538";
+  usdcAddress = "0x570C44378F78BF37656741b8CC9d15274C00688c";
+  bbitesTknAdd = "0x2bc50bD9eF6b37cefA4076Ccb0D12da2bD7bd48B";
+  pubSContractAdd = "0x5E24EFC1e166d87766f81AEc7695C72c101345CD";
 
   usdcTkContract = new Contract(usdcAddress, usdcTknAbi.abi, provider); // = new Contract(...
   bbitesTknContract = new Contract(bbitesTknAdd, bbitesTokenAbi.abi, provider); // = new Contract(...
@@ -66,8 +66,6 @@ function setUpListeners() {
       console.log("Billetera metamask", account);
       walletIdEl.innerHTML = account;
       signer = await provider.getSigner(account);
-      var balance = await usdcTkContract.allowance(account, pubSContractAdd);
-      console.log(balance)
     }
   });
 
@@ -83,8 +81,7 @@ function setUpListeners() {
   bttn.addEventListener("click", async function () {
     var balance = await usdcTkContract.balanceOf(account);
     var balanceEl = document.getElementById("usdcBalance");
-    var balance2 = await usdcTkContract.balanceOf(pubSContract);
-    balanceEl.innerHTML = ethers.formatUnits(balance, 6) + " " + ethers.formatUnits(balance2, 6);
+    balanceEl.innerHTML = ethers.formatUnits(balance, 6);
   });
 
   // Bbites token Balance - balanceOf
@@ -93,7 +90,7 @@ function setUpListeners() {
     var balance = await bbitesTknContract.balanceOf(account);
     var balanceEl = document.getElementById("bbitesTknBalance");
     var balance2 = await bbitesTknContract.balanceOf(pubSContract);
-    balanceEl.innerHTML = ethers.formatUnits(balance, 18) + " " + ethers.formatUnits(balance2, 18);
+    balanceEl.innerHTML = ethers.formatUnits(balance, 18);
   });
 
   var usdMint = document.getElementById('usdcMintBtn');
@@ -187,10 +184,21 @@ function setUpListeners() {
 
 function setUpEventsContracts() {
   var pubSList = document.getElementById("pubSList");
-  // pubSContract - "PurchaseNftWithId"
+  pubSContract.on("PurchaseNftWithId", (owner, id) => {
+    const node = document.createElement("p")
+    const textNode = document.createTextNode(`Owner ${owner} Id ${id}`)
+    node.appendChild(textNode)
+    pubSList.appendChild(node);
+  })
 
   var bbitesListEl = document.getElementById("bbitesTList");
   // bbitesCListener - "Transfer"
+  bbitesTknContract.on("Transfer", (from, to, amount) => {
+    const node = document.createElement("p")
+    const textNode = document.createTextNode(`From ${from} To ${to} Amount ${ethers.formatUnits(amount, 18)}`)
+    node.appendChild(textNode)
+    bbitesListEl.appendChild(node);
+  })
 
   var nftList = document.getElementById("nftList");
   // nftCListener - "Transfer"
@@ -210,7 +218,7 @@ async function setUp() {
 
   setUpListeners()
 
-  // setUpEventsContracts
+  setUpEventsContracts()
 
   // buildMerkleTree
 }
