@@ -34,13 +34,14 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
 
     function initialize(
         IUniSwapV2Router02 _router,
-        IERC20 usdc,
+        IERC20 _usdc,
         IERC20Upgradeable _token
     ) initializer public {
         __Pausable_init();
         __AccessControl_init();
         __UUPSUpgradeable_init();
         router = _router;
+        usdc = _usdc;
         token = _token;
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -52,18 +53,19 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         require(_id >= 0 && _id <= 699, "Compra no disponible");
         require(!mintedToken[_id], "Id no disponible");
         uint price = getPriceForId(_id);
-        token.transfer(address(this), price * 10 ** token.decimals());
         mintedToken[_id] = true;
+        token.transferFrom(msg.sender, address(this), price);
         emit PurchaseNftWithId(msg.sender, _id);
     }
 
     function getPriceForId(uint _id) public view returns (uint) {
+        require(_id >= 0 && _id <= 699, "Compra no disponible");
         if(_id >= 0 && _id <= 199) {
-            return 1000;
+            return 1_000 * 10 ** 18;
         } else if (_id >= 200 && _id <= 499) {
-            return _id * 20;
-        } else if (_id >= 500 && _id <= 699) {
-            uint priceCalculated = 10_000 + 2_000 * (block.timestamp - startDate) / 60 / 60 / 24;
+            return _id * 20 * 10 ** 18;
+        } else {
+            uint priceCalculated = (10_000 + 2_000 * ((block.timestamp - startDate) / 1 days)) * 10 ** 18;
             if(priceCalculated > MAX_PRICE_NFT) {
                 return MAX_PRICE_NFT;
             }
@@ -74,16 +76,21 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
     function purchaseWithUSDC(uint256 _id, uint256 _amountIn) external {
         require(_id >= 0 && _id <= 699, "Compra no disponible");
         require(!mintedToken[_id], "Id no disponible");
-        usdc.approve(address(router), _amountIn)
+        usdc.transferFrom(msg.sender, address(this), _amountIn);
+        usdc.approve(address(router), _amountIn);
+        address[] memory path = new address[](2);
+        path[0] = address(usdc);
+        path[1] = address(token);
         uint[] memory _amounts = router.swapTokensForExactTokens(
             getPriceForId(_id),
             _amountIn,
-            [address(usdc), address(token)],
+            path,
             address(this),
-            deadline
+            block.timestamp + 60000
         );
-        token.transfer(address(this), _amounts[0] * price * 10 ** token.decimals());
-        usdc.trasfer(msg.sender, _amounts[1]);
+        if(_amountIn > _amounts[0]) {
+            usdc.transfer( msg.sender, _amountIn - _amounts[0]);
+        }
         // transfiere _amountIn de USDC a este contrato
         // llama a swapTokensForExactTokens: valor de retorno de este metodo es cuanto gastaste del token input
         // transfiere el excedente de USDC a msg.sender
@@ -92,6 +99,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
     }
 
     function purchaseWithEtherAndId(uint256 _id) public payable {
+        require(msg.value >= 0.01 ether, "Monto insuficiente");
         require(_id >= 700 && _id <= 999, "Compra no disponible");
         require(!mintedToken[_id], "Id no disponible");
         if (msg.value > 0.01 ether) {
@@ -108,7 +116,7 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         emit PurchaseNftWithId(msg.sender, _id);
     }
 
-    function getRandomNumber() public returns(uint) {
+    function getRandomNumber() public view returns(uint) {
         uint number = uint256(
             keccak256(
                 abi.encodePacked(
@@ -121,12 +129,28 @@ contract PublicSale is Initializable, PausableUpgradeable, AccessControlUpgradea
         return number;
     }
 
-    receive() external payable {
-        depositEthForARandomNft();
+    function withdrawEther() public onlyRole(DEFAULT_ADMIN_ROLE) {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
-    function updateTokenAddress(address _tokenAddress) public onlyRole(DEFAULT_ADMIN_ROLE){
-        tokenAddress = _tokenAddress;
+    function withdrawTokens() public onlyRole(DEFAULT_ADMIN_ROLE) {
+        token.transfer(msg.sender, token.balanceOf(address(this)));
+    }
+
+    function getRouterAddress() public view returns (address) {
+        return address(router);
+    }
+
+    function getUSDCAddress() public view returns (address){
+        return address(usdc);
+    }
+
+    function getTokenAddress() public view returns (address){
+        return address(token);
+    }
+
+    receive() external payable {
+        depositEthForARandomNft();
     }
 
     ////////////////////////////////////////////////////////////////////////

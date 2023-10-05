@@ -17,7 +17,7 @@ contract USDCoin is ERC20, AccessControl {
         _mint(to, amount);
     }
 
-    function decimals() public view override returns(uint) {
+    function decimals() public pure override returns(uint8) {
         return 6;
     }
 }

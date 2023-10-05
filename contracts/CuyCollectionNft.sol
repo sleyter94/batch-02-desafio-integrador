@@ -37,7 +37,7 @@ contract CuyCollectionNft is Initializable, ERC721Upgradeable, PausableUpgradeab
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "ipfs://QmTWvm55znTX6NmgopdUpJX8CJsNzhGJY4bJVmMvoJP5hA/";
+        return "ipfs://QmYH7h4qHfQct87zGssiCRpXEbP9iPvxtvuS2nzmXz2CLB/";
     }
 
     function safeMint(
@@ -57,6 +57,7 @@ contract CuyCollectionNft is Initializable, ERC721Upgradeable, PausableUpgradeab
             verify(_hashearInfo(to, tokenId), proofs),
             "No eres parte de la lista"
         );
+        _safeMint(to, tokenId);
     }
 
     function _hashearInfo(
@@ -73,7 +74,7 @@ contract CuyCollectionNft is Initializable, ERC721Upgradeable, PausableUpgradeab
         return MerkleProof.verify(proofs, root, leaf);
     }
 
-    function updateRoot(bytes32 _root) {
+    function updateRoot(bytes32 _root) public onlyRole(DEFAULT_ADMIN_ROLE) {
         root = _root;
     }
 
