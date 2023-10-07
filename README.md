@@ -204,10 +204,10 @@ Crear un front-end minimalista para poder interactuar con el contrato de `Public
 2. ~~Contrato NFT `ERC721` con una colección de 2000 cuyes~~
 3. ~~Contrato de `Public Sale`~~
 4. ~~Stable Coin `USDC` ficticio~~
-5. Autotask: `Goerli` a `Mumbai`. Incluye código en `goerliToMumbai.js`.
-6. Autotask: `Mumbai` a `Goerli`. Incluye código en `mumbaiToGoerli.js`.
+5. ~~Autotask: `Goerli` a `Mumbai`. Incluye código en `goerliToMumbai.js`.~~
+6. ~~Autotask: `Mumbai` a `Goerli`. Incluye código en `mumbaiToGoerli.js`.~~
 7. ~~Pool de liquidez en Uniswap V2: 0x1edb8f499c776dd0332e56e3371c886a231c4c99b3f747f9aafebdb83924b9c2~~
-8. Front-end con los métodos implementados del punto `8 - Front-end`
+8. ~~Front-end con los métodos implementados del punto `8 - Front-end`~~
 9. Testing con alta cobertura para `Public Sale`
 10. Testing con alta cobertura para `ERC721`
 11. ~~Script de deployment para contratos en `Goerli`~~

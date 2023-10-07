@@ -43,10 +43,12 @@ async function deployGoerli() {
   await verify(usdAddress, usdCoinName)
 
   //Deploy BBitesToken
+  const relayerMTG = '0xE2Be2bB960ca035570b7D5AD639779678390C811'
   const bbitesTokenName = "BBitesToken"
   const bbitesToken = await deploySC(bbitesTokenName);
   const bbitesAddress = await bbitesToken.getAddress()
   const bbitesContractImpl = await printAddress(bbitesTokenName, bbitesAddress)
+  await bbitesToken.grantRole(MINTER_ROLE, relayerMTG)
   await verify(bbitesContractImpl, bbitesTokenName)
 
   

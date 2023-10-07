@@ -24,13 +24,13 @@ exports.handler = async function (data) {
     ev.signature.includes("PurchaseNftWithId")
   );
   // Mismos params que en el evento
-  var { owner, id } = event[0].params;
+  var { account, id } = event[0].params;
 
   // Ejecutar 'mint' en Mumbai del contrato CuyNft
   var CuyNftAddress = "0xc8eD066481BfCb0d3347d0252bDb8F08eEDd98D2";
   var tokenAbi = ["function safeMint(address to, uint256 tokenId)"];
   var tokenContract = new ethers.Contract(CuyNftAddress, tokenAbi, signer);
-  var tx = await tokenContract.safeMint(owner, id);
+  var tx = await tokenContract.safeMint(account, id);
   var res = await tx.wait();
   return res;
 };
