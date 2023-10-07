@@ -142,7 +142,7 @@ Para asegurar la conveniencia del usuario y éxito de tu proyecto, has creado un
 1. Dentro de la carpeta `ipfs` tenemos dos carpetas: `images` y `metadata`. Estas dos carpetas representan a los activos digitales y la metadata, respectivamente.
 2. Guardar la carpeta de `images` de activos digitales en la aplicación de escritorio `IPFS`. Obtener el `CID` luego de guardar la carpeta `images`.
 3. Dentro de la carpeta de `metadata`, se encontrarán los archivos `json` enumerados de manera secuencial. Cada archivo `json`, representa la metada de un activo digital en particular. Por ejemplo, el archivo `0`, representa la metadata del activo digital `0.png`, guardada en la otra carpeta `images`.
-4. Vamos a modificar los archivos de `metadata`. Por ejemplo, empecemos con `./metadata/0`. Buscar la propiedad `"image": "ipfs://[enter the CID here]/0.png"`. Reemplazar por el valor del `CID` obtenido en el punto 2 para todos los archivos. Usa `ctrl + shift + h`.
+4. Vamos a modificar los archivos de `metadata`. Por ejemplo, empecemos con `./metadata/0`. Buscar la propiedad `"image": "ipfs://QmWJ3udcvB2XjvgWjcn8YrC7w8VEL2VWaUMq1x6Ns4t29k/0.png"`. Reemplazar por el valor del `CID` obtenido en el punto 2 para todos los archivos. Usa `ctrl + shift + h`.
 5. Así también cambia la propiedad `description` y escoge un nombre apropiado para tu colección. Usa `ctrl + shift + h`.
 6. (Opcional) Dado que hay cinco grupos diferentes de NFTs, modificar el atributo `name` de cada archivo `json` para que represente más apropiadamente al grupo de NFT al que pertenece.
 7. (Opcional) Agregar más atributos en la propiedad `attributes`. Seguir la guía/estándar definido en la página de Open Sea que lo puedes encontrar [aquí](https://docs.opensea.io/docs/metadata-standards). Estos atributos serán vistos en la galería de Opean Sea.
@@ -200,18 +200,18 @@ Crear un front-end minimalista para poder interactuar con el contrato de `Public
 
 ## Entregables
 
-1. Token ERC20 `BBITES Token - BBTKN`
-2. Contrato NFT `ERC721` con una colección de 2000 cuyes
-3. Contrato de `Public Sale`
-4. Stable Coin `USDC` ficticio
+1. ~~Token ERC20 `BBITES Token - BBTKN`~~
+2. ~~Contrato NFT `ERC721` con una colección de 2000 cuyes~~
+3. ~~Contrato de `Public Sale`~~
+4. ~~Stable Coin `USDC` ficticio~~
 5. Autotask: `Goerli` a `Mumbai`. Incluye código en `goerliToMumbai.js`.
 6. Autotask: `Mumbai` a `Goerli`. Incluye código en `mumbaiToGoerli.js`.
-7. Pool de liquidez en Uniswap V2
+7. ~~Pool de liquidez en Uniswap V2: 0x1edb8f499c776dd0332e56e3371c886a231c4c99b3f747f9aafebdb83924b9c2~~
 8. Front-end con los métodos implementados del punto `8 - Front-end`
 9. Testing con alta cobertura para `Public Sale`
 10. Testing con alta cobertura para `ERC721`
-11. Script de deployment para contratos en `Goerli`
-12. Script de deployment para contratos en `Mumbai`
+11. ~~Script de deployment para contratos en `Goerli`~~
+12. ~~Script de deployment para contratos en `Mumbai`~~
 
 # Completar
 

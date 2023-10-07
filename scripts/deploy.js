@@ -11,15 +11,19 @@ const {
 
 const { getRootFromMT } = require("../utils/merkleTree");
 
+
 var MINTER_ROLE = getRole("MINTER_ROLE");
 var BURNER_ROLE = getRole("BURNER_ROLE");
 
 // Publicar NFT en Mumbai
 async function deployMumbai() {
+  const relayerGTM = '0x3126bf3c550300b0D80558299F756E5283f90e3E';
   const cuyNFTName = 'CuyCollectionNft'
   const cuyNftContract = await deploySC(cuyNFTName);
   const cuyNftAddress = await cuyNftContract.getAddress();
   const cuyNftContractImpl = await printAddress(cuyNFTName, cuyNftAddress);
+  await cuyNftContract.updateRoot(getRootFromMT())
+  await cuyNftContract.grantRole(MINTER_ROLE, relayerGTM)
   await verify(cuyNftContractImpl, cuyNFTName);
 
   // utiliza deploySC
@@ -45,16 +49,18 @@ async function deployGoerli() {
   const bbitesContractImpl = await printAddress(bbitesTokenName, bbitesAddress)
   await verify(bbitesContractImpl, bbitesTokenName)
 
-  var relAddGoerli = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'; // relayer goerli
+  
+  var uniSwap = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'; // relayer goerli
   // Deploy public Sale
   const publicSaleName = 'PublicSale'
   const publicSale = await deploySC(publicSaleName, [
-    relAddGoerli,
+    uniSwap,
     usdAddress,
     bbitesAddress
   ]);
   const publicSaleAddress = await publicSale.getAddress();
   const publicSaleImpl = await printAddress(publicSaleName, publicSaleAddress)
+  
   await verify(publicSaleImpl, publicSaleName, [])
 
   // var psC Contrato

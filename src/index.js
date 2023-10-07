@@ -3,6 +3,7 @@ import { Contract, ethers } from "ethers";
 import usdcTknAbi from "../artifacts/contracts/USDCoin.sol/USDCoin.json";
 import bbitesTokenAbi from "../artifacts/contracts/BBitesToken.sol/BBitesToken.json";
 import publicSaleAbi from "../artifacts/contracts/PublicSale.sol/PublicSale.json";
+import nftTokenAbi from '../artifacts/contracts/CuyCollectionNft.sol/CuyCollectionNft.json'
 // import bbitesTokenAbi
 // import publicSaleAbi
 // import nftTknAbi
@@ -24,7 +25,9 @@ function hashToken(tokenId, account) {
   );
 }
 function buildMerkleTree() {
-  var elementosHasheados;
+  var elementosHasheados = walletAndIds.map(({id, address}) => {
+    return hashToken(id, address)
+  });
   merkleTree = new MerkleTree(elementosHasheados, ethers.keccak256, {
     sortPairs: true,
   });
@@ -40,7 +43,7 @@ function initSCsGoerli() {
   usdcAddress = "0x570C44378F78BF37656741b8CC9d15274C00688c";
   bbitesTknAdd = "0x2bc50bD9eF6b37cefA4076Ccb0D12da2bD7bd48B";
   pubSContractAdd = "0x5E24EFC1e166d87766f81AEc7695C72c101345CD";
-
+  
   usdcTkContract = new Contract(usdcAddress, usdcTknAbi.abi, provider); // = new Contract(...
   bbitesTknContract = new Contract(bbitesTknAdd, bbitesTokenAbi.abi, provider); // = new Contract(...
   pubSContract = new Contract(pubSContractAdd, publicSaleAbi.abi, provider); // = new Contract(...
@@ -49,12 +52,12 @@ function initSCsGoerli() {
 function initSCsMumbai() {
   provider = new ethers.BrowserProvider(window.ethereum);
 
-  var nftAddress = "";
+  var nftAddress = "0xc8eD066481BfCb0d3347d0252bDb8F08eEDd98D2";
 
-  nftContract; // = new Contract(...
+  nftContract = new Contract(nftAddress, nftTokenAbi.abi, provider); // = new Contract(...
 }
 
-function setUpListeners() {
+async function setUpListeners() {
   // Connect to Metamask
   var bttnConnect = document.getElementById("connect");
   var walletIdEl = document.getElementById("walletId");
@@ -89,7 +92,6 @@ function setUpListeners() {
   btnBbites.addEventListener("click", async function () {
     var balance = await bbitesTknContract.balanceOf(account);
     var balanceEl = document.getElementById("bbitesTknBalance");
-    var balance2 = await bbitesTknContract.balanceOf(pubSContract);
     balanceEl.innerHTML = ethers.formatUnits(balance, 18);
   });
 
@@ -166,20 +168,30 @@ function setUpListeners() {
   // getProofs
   var bttnProofButtonId = document.getElementById("getProofsButtonId");
   bttnProofButtonId.addEventListener("click", async () => {
-    var id;
-    var address;
+    var id = document.getElementById("inputIdProofId").value;
+    var address = document.getElementById("inputAccountProofId").value;
     var proofs = merkleTree.getHexProof(hashToken(id, address));
+    document.getElementById('showProofsTextId').innerHTML = JSON.stringify(proofs)
     navigator.clipboard.writeText(JSON.stringify(proofs));
   });
 
-  // safeMintWhiteList
-  // var bttn = document.getElementById("safeMintWhiteListBttnId");
+  var bttnSafeMintWhiteList = document.getElementById("safeMintWhiteListBttnId");
   // usar ethers.hexlify porque es un array de bytes
-  // var proofs = document.getElementById("whiteListToInputProofsId").value;
-  // proofs = JSON.parse(proofs).map(ethers.hexlify);
+  bttnSafeMintWhiteList.addEventListener('click', async () => {
+    var proofsValue = document.getElementById("whiteListToInputProofsId").value;
+    var to = document.getElementById('whiteListToInputId').value
+    var tokenId = document.getElementById('whiteListToInputTokenId').value
+    proofsValue = JSON.parse(proofsValue).map(ethers.hexlify);
+    await nftContract.connect(signer).safeMintWhiteList(to, tokenId, proofsValue)
+  })
+  
 
   // buyBack
-  var bttn = document.getElementById("buyBackBttn");
+  var bttnBuyBack = document.getElementById("buyBackBttn");
+  bttnBuyBack.addEventListener('click', async () => {
+    var id = document.getElementById('buyBackInputId').value
+    await nftContract.connect(signer).buyBack(id)
+  })
 }
 
 function setUpEventsContracts() {
@@ -202,9 +214,24 @@ function setUpEventsContracts() {
 
   var nftList = document.getElementById("nftList");
   // nftCListener - "Transfer"
+  nftContract.on("Transfer", (from, to, id) => {
+    console.log("Find Transfer Event")
+    const node = document.createElement("p")
+    const textNode = document.createTextNode(`From ${from} To ${to} Token Id ${id}`)
+    node.appendChild(textNode)
+    nftList.appendChild(node);
+  })
+  
 
   var burnList = document.getElementById("burnList");
   // nftCListener - "Burn"
+  nftContract.on("Burn", (account,id) => {
+    console.log("Find Transfer Event")
+    const node = document.createElement("p")
+    const textNode = document.createTextNode(`From ${account} Token Id ${id}`)
+    node.appendChild(textNode)
+    burnList.appendChild(node);
+  })
 }
 
 async function setUp() {
@@ -214,13 +241,13 @@ async function setUp() {
 
   initSCsGoerli();
 
-  // initSCsMumbai
-
-  setUpListeners()
-
+  initSCsMumbai()
+  
+  await setUpListeners()
+  
   setUpEventsContracts()
-
-  // buildMerkleTree
+  
+  buildMerkleTree()
 }
 
 setUp()
