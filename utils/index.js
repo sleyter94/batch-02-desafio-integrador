@@ -45,6 +45,7 @@ async function deploySC(contractName, args = []) {
   var smartContract = await gcf(contractName);
   var proxyContract = await dp(smartContract, [...args], {
     kind: "uups",
+    redeployImplementation: 'always'
   });
   if (process.env.HARDHAT_NETWORK) {
     // true cuando se usa '--network matic' en el script de deployment
