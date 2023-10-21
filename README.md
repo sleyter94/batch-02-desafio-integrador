@@ -216,9 +216,22 @@ Crear un front-end minimalista para poder interactuar con el contrato de `Public
 # Completar
 
 1. Pega aquí la tx de una compra de un NFT `común` en `Public Sale` usando `UDSC`:
+   1. Tx en Goerli: 0xe1369ab89d8137f1a79772794531286ab68df57359b6238c804eca41dec89d09
+   2. Tx en Mumbai: 0x1e73a7eaee73becdb6aaf8ccbdbb92fdaae89f34b2ba41645eba0cdd874e9c31
 2. Pega aquí la tx de una compra de un NFT `raro` en `Public Sale` usando `BBTKN`:
+   1. Tx en Goerli: 0x6f0bc95c2d4011ca239187fab39664c254b3166cb41ea466308ef510f8dcc485
+   2. Tx en Mumbai: 0xed4f50986b32f2c0f9ae06f6bf0e7ef3ad374938c45e3994199c16f1b04a1fc9
 3. Pega aquí la tx de una compra de un NFT `legendario` en `Public Sale` usando `UDSC`:
+   1. Tx en Goerli: 0x9203576dad2e34393085cbf6c442225d53b0183f8cea6d4e39eef66f3ef11e4b
+   2. Tx en Mumbai: 0x7e4f0155dad8b0256d561b38f3bc33ff2fc2d732f2fb602db314b10be29ddb58
 4. Pega aquí la tx de una compra de un NFT `mistico` en `Public Sale` usando `ether` y un `id` en específico:
+   1. Tx en Goerli: 0x9018b18b931c6e53546bf46ca6b03f0b39497d996b689c4172455742ca753fc2
+   2. Tx en Mumbai: 0x974925c2bdc2f1159776aeceb98fb65da0e506223ae6fde0dbcce5267dfe6976
 5. Pega aquí la tx de una compra de un NFT `mistico` en `Public Sale` usando `ether` (random id):
+   1. Tx en Goerli: 0x1e5a9ebdda66ea901b721d8ff88047c6203132a8b9faa72ef6ed7797c7179c62
+   2. Tx en Mumbai: 0x7c1c1532ee102d3a849d74e75ba23997aa7b9318c187bfc714d2800d0c7407cc
 6. Pega aquí la tx de una acuñación whitelist de un NFT en el contrato `NFT`:
+   1. Tx en Mumbai: 0x307e295357dccee302353f811cb8badda221b3f04a13a036b2320143cf826ff3
 7. Pega aquí la tx de un buy back de NFT en el contrato `NFT`:
+   1. Tx en Mumbai: 0xf27e26423ee9964a9f98ef4f91105c6a7d1191b685f7d42dae9f978ebd32a2cf
+   2. Tx en Goerli: 0xa8a7fcb77ae7f370d5a7625903c554ac2f958c4f0c0a2d9394ca0dcf0aef1231

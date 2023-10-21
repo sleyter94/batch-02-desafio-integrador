@@ -72,13 +72,6 @@ async function setUpListeners() {
     }
   });
 
-  var bttnUsdAddress = document.getElementById("usdcAddressBttn");
-  bttnUsdAddress.addEventListener("click", async function () {
-    var address = await pubSContract.getRouterAddress();
-    var balanceEl = document.getElementById("usdcAddress");
-    balanceEl.innerHTML = address;
-  });
-
   // USDC Balance - balanceOf
   var bttn = document.getElementById("usdcUpdate");
   bttn.addEventListener("click", async function () {
@@ -97,12 +90,12 @@ async function setUpListeners() {
 
   var usdMint = document.getElementById('usdcMintBtn');
   usdMint.addEventListener('click', async function() {
-    await usdcTkContract.connect(signer).mint(account, 10_000 * 1e6)
+    await usdcTkContract.connect(signer).mint(account, 30_000 * 1e6)
   })
 
   var bbitesMint = document.getElementById('bbitesTknMintBtn');
   bbitesMint.addEventListener('click', async function() {
-    await bbitesTknContract.connect(signer).mint(account, ethers.parseEther("1000"))
+    await bbitesTknContract.connect(signer).mint(account, ethers.parseEther("100000"))
   })
   
   
@@ -143,7 +136,6 @@ async function setUpListeners() {
   bttnPurchaseWithUSDC.addEventListener('click', async () => {
     var id = document.getElementById('purchaseInputUSDC').value
     var amountIn = document.getElementById('amountInUSDCInput').value
-    console.log(ethers.parseUnits(amountIn, 6))
     await pubSContract.connect(signer).purchaseWithUSDC(id, ethers.parseUnits(amountIn, 6))
   })
 
@@ -226,7 +218,6 @@ function setUpEventsContracts() {
   var burnList = document.getElementById("burnList");
   // nftCListener - "Burn"
   nftContract.on("Burn", (account,id) => {
-    console.log("Find Transfer Event")
     const node = document.createElement("p")
     const textNode = document.createTextNode(`From ${account} Token Id ${id}`)
     node.appendChild(textNode)
